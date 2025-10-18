@@ -1,9 +1,10 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private PlayerInput inputJugador;
-    [SerializeField] private RigidBody rb;
+    private PlayerInput input;
+    private Rigidbody rb;
 
     [SerializeField] private float velocidad=2f;
 
