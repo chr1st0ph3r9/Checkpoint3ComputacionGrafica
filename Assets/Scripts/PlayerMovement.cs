@@ -12,11 +12,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float velocidadMovimiento=2f;
     private Vector2 direccionMovimiento;
 
-    [Header("camara")]
-    [SerializeField] private float sensibilidadCamara=1f;
-    [SerializeField] private CinemachineOrbitalFollow camara;
-    private Vector2 movimientoCamara;
-    [SerializeField] private float deadZoneCamara=0.1f;
+    [SerializeField] private Animator animatorMovimiento;
+
+    [SerializeField] private Camera camaraPrincipal;
+
+
 
 
 
@@ -37,27 +37,29 @@ public class PlayerMovement : MonoBehaviour
         direccionMovimiento = contexto.ReadValue<Vector2>();
     }
 
-    private void MovimientoCamara(InputAction.CallbackContext contexto)
-    {
-        movimientoCamara = contexto.ReadValue<Vector2>();
-    }
+
 
 
     private void Update() {
 
-        Vector3 direccionMovimientoUpdate = new Vector3(direccionMovimiento.x* velocidadMovimiento, rbJugador.linearVelocity.y, direccionMovimiento.y* velocidadMovimiento);
+    Vector3 direccionMovimientoUpdate = new Vector3(direccionMovimiento.x * velocidadMovimiento, rbJugador.linearVelocity.y, direccionMovimiento.y * velocidadMovimiento);
+        Vector3 direccionCamaraAdelante = camaraPrincipal.transform.forward;
+        direccionCamaraAdelante.y = 0;
+        Vector3 direccionCamaraDerecha = camaraPrincipal.transform.right;
+        direccionCamaraDerecha.y = 0;
 
 
+        direccionMovimientoUpdate = direccionMovimientoUpdate.z*direccionCamaraAdelante  + direccionMovimientoUpdate.x*direccionCamaraDerecha;
+
+
+
+
+
+        transform.forward = direccionCamaraAdelante;
 
         rbJugador.linearVelocity = direccionMovimientoUpdate;
 
-        //if (movimientoCamara.magnitude> deadZoneCamara)
-        //{
-        //    camara.HorizontalAxis.Value += movimientoCamara.x * sensibilidadCamara * Time.deltaTime;
-        //    camara.VerticalAxis.Value += movimientoCamara.y * sensibilidadCamara * Time.deltaTime;
-
-        //}
-
+        animatorMovimiento.SetFloat("Velocidad", rbJugador.linearVelocity.magnitude);
 
 
     }
